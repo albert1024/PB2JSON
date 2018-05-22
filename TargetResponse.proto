@@ -1,0 +1,87 @@
+import "BaseResponse.proto";
+
+message ExposureInfo
+{
+    repeated SingleExposureInfo single_exposure_info_list = 1; //奖品曝光信息数组
+    optional uint32 is_query_others = 2;  //用户在刮一刮或者摇一摇结束后，是否需要请求后台抽取其他奖品，调用后重新绘制用户刮一刮或摇一摇的抽奖结果。大于0就需要抽取
+    optional string draw_lottery_params = 3; //抽其他奖品参数
+    optional uint32 is_show_btn = 4;  //是否展示按钮 大于0就展示
+    optional BtnInfo btn_info = 5;  //按钮相关信息
+    optional string exposure_info_modify_params = 6; //支付结果页跳转H5或者小程序后，点击返回，请求修改曝光信息的参数，不为空时回传给营销appsvr的mktmodifyexposure接口即可
+    optional uint32 user_opertaion_type = 7;    //运营位曝光后用户抽奖方式 1、刮一刮。2、摇一摇。3、又能刮又能摇。 4、不用用户抽奖，直接展示信息。5、新的支付结果页摇完跳小程序类型
+    optional uint32 is_show_layer = 8;  //是否展示浮层
+    optional LayerInfo layer_info = 9;  //浮层信息
+    optional string background_img_whole = 10;  //整个支付成功页的背景图片
+    optional DrawLotteryInfo draw_lottery_info = 11;    //user_opertaion_type 为5时使用
+}
+
+message DrawLotteryInfo
+{
+    optional MiniAppInfo mini_app_info = 1; //需要跳转的小程序信息
+    optional string url = 2; //跳转的URL
+    optional string animation_wording = 3;     //动画wording
+    optional string animation_wording_color = 4;     //动画wording颜色
+    optional uint32 op_type = 5;    // 1、展示动画和wording等待用户抽奖，2、跳转小程序。3、跳URL，4、展示运营位信息（SingleExposureInfo，BtnInfo）
+    optional string after_animation_wording = 6;    //动画播放3s后的文案
+    optional string after_animation_wording_color = 7;  //动画播放3s后文案的颜色e
+}
+
+//支付成功页浮层信息
+message LayerInfo
+{
+    optional string layer_title = 1;    //浮层title
+    optional string layer_logo = 2; //浮层logo
+    optional string layer_type = 3; //浮层类型  1、红包未拆类型。2、红包已拆类型。3、其他奖品展示类型。4、语音浮层
+    optional string layer_name = 4; //浮层中间展示的名称
+    optional string layer_description = 5; //浮层名称下面的文案
+    optional uint32 is_show_layer_btn = 6;  //是否展示浮层按钮
+    optional LayerBtnInfo layer_btn_info = 7;   //浮层信息
+    optional bytes voice_url = 8;
+    optional bytes voice_data = 9;
+}
+
+//浮层按钮信息
+message LayerBtnInfo
+{
+    optional string btn_words = 1;   //按钮文案
+    optional string btn_color = 2;   //按钮颜色 #ffffff
+    optional uint32 btn_op_type = 3;    //按钮操作类型，1 直接领奖（调用营销appsvr的GetLottery接口）。2 关闭浮层。3 按钮维持原操作不变。 4 跳转URL。 5 跳转小程序。
+    optional string get_lottery_params = 4;  //直接领奖的参数，btn_op_type = 1时使用，调用营销appsvr的GetLottery接口
+    optional string url = 5; //跳转的URL btn_op_type为4时使用 注意浮层按钮操作类型与运营位按钮操作类型不同
+    optional MiniAppInfo mini_app_info = 6; //需要跳转的小程序信息 btn_op_type为5时使用 注意浮层按钮操作类型与运营位按钮操作类型不同
+}
+
+message CgiF2FPaySucPageResp {
+	required BaseResponse baseResponse = 1;
+	optional uint32 retcode = 2;
+	optional string retmsg = 3;
+	optional uint64 activity_type = 4; // not used now
+	optional ExposureInfo exposure_info = 5;
+}
+
+message SingleExposureInfo
+{
+    optional string logo = 1;    //logo，为空不展示logo，logo可不展示
+    optional string award_name = 2;  //奖品名称，为空不展示
+    optional string award_description = 3;   //奖品描述 为空不展示
+    optional string background_img = 4; //背景图片 为空不展示
+    optional string award_name_color = 5;   //奖品名称颜色 为空使用默认颜色
+    optional string award_description_color = 6;    //奖品描述颜色 为空使用默认颜色
+}
+
+message BtnInfo
+{
+	optional string btn_words = 1;   //按钮文案
+	optional string btn_color = 2;   //按钮颜色 #ffffff
+	optional uint32 btn_op_type = 3;    //按钮操作类型，1跳转URL，2跳转小程序，3直接领奖（调用营销appsvr的GetLottery接口），4 按钮维持原操作不变，5 只展示按钮文案和颜色，按钮不可点击，6 弹出浮层，7 抽奖（调用营销appsvr的DrawLottery接口），8 先调用营销appsvr的GetLottery接口，再跳H5，9 先调用营销appsvr的GetLottery接口， 再跳小程序
+	optional string url = 4; //跳转的URL btn_op_type为1时使用
+	optional MiniAppInfo mini_app_info = 5; //需要跳转的小程序信息 btn_op_type为2时使用
+	optional string get_lottery_params = 6;  //直接领奖的参数，btn_op_type = 3时使用，调用营销appsvr的GetLottery接口
+}
+
+message MiniAppInfo
+{
+    optional string activity_tinyapp_username = 1;   //小程序appname
+    optional string activity_tinyapp_path = 2;       //小程序path
+    optional uint32 activity_tinyapp_version = 3;   //小程序版本号
+}

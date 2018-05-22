@@ -1,0 +1,8 @@
+message SKBuiltinString_t {
+    optional string String = 1;
+}
+
+message BaseResponse {
+	required int32 Ret = 1;
+	required SKBuiltinString_t ErrMsg = 2;
+}
