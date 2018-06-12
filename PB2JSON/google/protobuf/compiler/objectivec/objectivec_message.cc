@@ -158,6 +158,10 @@ namespace google { namespace protobuf { namespace compiler { namespace objective
     field_generators_(descriptor) {
     }
     
+    MessageGenerator::MessageGenerator(const Descriptor* descriptor, const string cgiNumber, const string isUpdateFromSvr)
+    : descriptor_(descriptor),
+    field_generators_(descriptor),  cgiNumber_(cgiNumber), isUpdateFromSvr_(isUpdateFromSvr){
+    }
     
     MessageGenerator::~MessageGenerator() {
     }
@@ -388,7 +392,10 @@ namespace google { namespace protobuf { namespace compiler { namespace objective
         GenerateMessage(printer);
         printer->Outdent();
         printer->Print("}\n\n");
-        printer->Print("mockRequest().isUpdateFromSvr().withResponse(response)");
+        map<string,string> vars;
+        vars["cgiNumber"] = cgiNumber_;
+        vars["isUpdateFromSvr"] = isUpdateFromSvr_;
+        printer->Print(vars, "mockRequest($cgiNumber$).isUpdateFromSvr($isUpdateFromSvr$).withResponse(response)");
         
     }
     

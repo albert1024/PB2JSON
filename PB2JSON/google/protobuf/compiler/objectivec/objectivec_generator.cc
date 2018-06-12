@@ -63,7 +63,7 @@ namespace google { namespace protobuf { namespace compiler { namespace objective
     
     
     
-    bool ObjectiveCGenerator::GenerateMockCase(const string target_message, vector<const google::protobuf::FileDescriptor *> parsed_files, const std::string &parameter, google::protobuf::compiler::OutputDirectory *output_directory, std::string *error) const {
+    bool ObjectiveCGenerator::GenerateMockCase(const string target_message, const string cgi_number, const string isUpdateFromSvr, vector<const google::protobuf::FileDescriptor *> parsed_files, const std::string &parameter, google::protobuf::compiler::OutputDirectory *output_directory, std::string *error) const {
         
         vector<pair<string, string> > options;
         ParseOptions(parameter, &options);
@@ -101,9 +101,9 @@ namespace google { namespace protobuf { namespace compiler { namespace objective
         string filepath = FilePath(pTargetFd);
         {
             scoped_ptr<io::ZeroCopyOutputStream> output(
-                                                    output_directory->Open(filepath + ".js"));
+                                                    output_directory->Open(target_message + ".js"));
             io::Printer printer(output.get(), '$');
-            MessageGenerator messageGenerator(pTargetD);
+            MessageGenerator messageGenerator(pTargetD, cgi_number, isUpdateFromSvr);
             messageGenerator.GenerateMockCase(&printer);
 //            file_generator.GenerateHeader(&printer);
         }

@@ -352,7 +352,7 @@ int CommandLineInterface::Run(int argc, const char* const argv[]) {
     // Import the file.
     const FileDescriptor* parsed_file = importer.Import(input_files_[i]);
     
-      printf("parsedfile_name:%s\n \
+      //printf("parsedfile_name:%s\n \
              parsefile_count:%d\n \
              parsefile_dependency_count:%d\n ", parsed_file->name().c_str(),parsed_file->message_type_count(), parsed_file->dependency_count());
       if (strcmp(parsed_file->name().c_str(), "BaseResponse.proto") == 0 ) {
@@ -378,7 +378,7 @@ int CommandLineInterface::Run(int argc, const char* const argv[]) {
         //PB2JSON Generate output files.
         const string target_message = target_message_;
         for (int i = 0; i < output_directives_.size(); i++) {
-            if (!PB2JSONGenerateOutput(target_message,parsed_files, output_directives_[i])) {
+            if (!PB2JSONGenerateOutput(parsed_files, output_directives_[i])) {
                 return 1;
             }
         }
@@ -695,7 +695,20 @@ bool CommandLineInterface::InterpretArgument(const string& name,
           return false;
       }
       target_message_ = value;
-  } else if (name == "--error_format") {
+  } else if (name == "--cgiNumber") {
+      if (value.empty()) {
+          cerr << "cgiNumber value can not be null." << endl;
+          return false;
+      }
+      cgi_number_ = value;
+  } else if (name == "--isUpdateFromSvr") {
+      if (value.empty()) {
+          cerr << "isUpdateFromSvr value can not be null." << endl;
+          return false;
+      }
+      isUpdateFromSvr_ = value;
+  }
+  else if (name == "--error_format") {
     if (value == "gcc") {
       error_format_ = ERROR_FORMAT_GCC;
     } else if (value == "msvs") {
@@ -786,7 +799,7 @@ void CommandLineInterface::PrintHelpText() {
   }
 }
 
-    bool CommandLineInterface::PB2JSONGenerateOutput(const string target_message,vector<const FileDescriptor*> parsed_files, const OutputDirective& output_directive) {
+    bool CommandLineInterface::PB2JSONGenerateOutput(vector<const FileDescriptor*> parsed_files, const OutputDirective& output_directive) {
         // Create the output directory.
         DiskOutputDirectory output_directory(output_directive.output_location);
         if (!output_directory.VerifyExistence()) {
@@ -795,7 +808,7 @@ void CommandLineInterface::PrintHelpText() {
         
         string error;
         google::protobuf::compiler::objectivec::ObjectiveCGenerator *const generator = (google::protobuf::compiler::objectivec::ObjectiveCGenerator *const)output_directive.generator;
-        if (!generator->GenerateMockCase(target_message, parsed_files, output_directive.parameter, &output_directory, &error)) {
+        if (!generator->GenerateMockCase(target_message_, cgi_number_, isUpdateFromSvr_, parsed_files, output_directive.parameter, &output_directory, &error)) {
             // Generator returned an error.
             
             return false;

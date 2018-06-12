@@ -752,6 +752,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				CONFIGURATION_BUILD_DIR = /Users/lianglitu/Developer/Wechat_Git/wechat_trunk/wechat/tools/PB2MockCase;
 				DEVELOPMENT_TEAM = P46MJD2ZY4;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/**";
 				PRODUCT_NAME = "$(TARGET_NAME)";

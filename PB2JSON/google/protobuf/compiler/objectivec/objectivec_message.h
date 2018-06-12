@@ -40,7 +40,10 @@ namespace google {
                 class MessageGenerator {
                 public:
                     explicit MessageGenerator(const Descriptor* descriptor);
+                    explicit MessageGenerator(const Descriptor* descriptor, const string cgiNumber, const string isUpdateFromSvr);
                     ~MessageGenerator();
+                    
+                    //const string
                     
                     void GenerateStaticVariablesHeader(io::Printer* printer);
                     void GenerateMockCase(io::Printer *printer);
@@ -84,6 +87,8 @@ namespace google {
                     void GenerateModelMapping(io::Printer* printer);
                     
                     const Descriptor* descriptor_;
+                    const string cgiNumber_;
+                    const string isUpdateFromSvr_;
                     FieldGeneratorMap field_generators_;
                     
                     GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(MessageGenerator);

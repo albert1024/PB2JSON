@@ -178,7 +178,7 @@ class LIBPROTOC_EXPORT CommandLineInterface {
   struct OutputDirective;  // see below
   bool GenerateOutput(const FileDescriptor* proto_file,
                       const OutputDirective& output_directive);
-    bool PB2JSONGenerateOutput(const string target_message,vector<const FileDescriptor*> parsed_files, const OutputDirective& output_directive);
+    bool PB2JSONGenerateOutput(vector<const FileDescriptor*> parsed_files, const OutputDirective& output_directive);
 
   // Implements --encode and --decode.
   bool EncodeOrDecode(const DescriptorPool* pool);
@@ -221,7 +221,8 @@ class LIBPROTOC_EXPORT CommandLineInterface {
   vector<pair<string, string> > proto_path_;  // Search path for proto files.
   vector<string> input_files_; // Names of the input proto files.
     string target_message_ ;
-
+    string cgi_number_;
+    string isUpdateFromSvr_;
   // output_directives_ lists all the files we are supposed to output and what
   // generator to use for each.
   struct OutputDirective {

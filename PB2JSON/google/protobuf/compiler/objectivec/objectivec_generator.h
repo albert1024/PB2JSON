@@ -41,7 +41,7 @@ class LIBPROTOC_EXPORT ObjectiveCGenerator : public CodeGenerator {
                 OutputDirectory* output_directory,
                 string* error) const;
     
-    bool GenerateMockCase(const string target_message,vector<const FileDescriptor*> parsed_files, const string& parameter,
+    bool GenerateMockCase(const string target_message, const string cgi_number, const string isUpdateFromSvr, vector<const FileDescriptor*> parsed_files, const string& parameter,
                           OutputDirectory* output_directory,
                           string* error) const;
 
